@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "X5nmQ1zWYREkKUi7yGcJy"
+uri = "file://artifacts/ecojharkhand/public/images/hero-waterfall.png"
+type = "image"
+title = "Jharkhand hero waterfall"
+
+[[generated]]
+id = "sve1GHnm85ozPVJyzJdW_"
+uri = "file://artifacts/ecojharkhand/public/images/artisan-weaving.png"
+type = "image"
+title = "Tribal artisan weaving"
+
+[[generated]]
+id = "zJT6cR7d5ZmsbHkcGURc0"
+uri = "file://artifacts/ecojharkhand/public/images/temple-ruins.png"
+type = "image"
+title = "Ancient temple ruins"

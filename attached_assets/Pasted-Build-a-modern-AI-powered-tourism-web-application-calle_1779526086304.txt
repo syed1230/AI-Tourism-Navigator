@@ -1,0 +1,121 @@
+Build a modern AI-powered tourism web application called “EcoJharkhand AI” using Python Flask, HTML, CSS, JavaScript, SQLite, and Bootstrap.
+
+Theme:
+A smart digital tourism platform for Jharkhand that promotes eco-tourism, tribal culture, sustainability, and local communities.
+
+Design Requirements:
+
+* Modern responsive UI
+* Dark green and earthy color palette
+* Glassmorphism cards
+* Smooth animations
+* Tourist-friendly interface
+* Sidebar navigation
+* Mobile responsive
+
+Main Features:
+
+1. AI Personalized Itinerary Planner
+
+* User enters budget, number of days, interests, and travel type
+* Generate personalized itinerary
+* Display day-wise travel plans
+
+2. Tribal Storytelling AI Guide
+
+* Every tourist place should contain:
+
+  * history
+  * tribal stories
+  * cultural information
+  * local traditions
+* Display in expandable cards
+
+3. Eco Score System
+
+* Users receive eco points for:
+
+  * using eco transport
+  * choosing homestays
+  * supporting local artisans
+* Display eco badges and leaderboard
+
+4. Hidden Gems Recommendation Engine
+
+* Recommend underrated tourist locations
+* Categorize by:
+
+  * waterfalls
+  * forests
+  * villages
+  * temples
+  * eco spots
+
+5. Smart Budget Calculator
+
+* Calculate estimated travel cost
+* Include:
+
+  * transport
+  * food
+  * stay
+  * local shopping
+
+6. Sentiment Analysis Dashboard
+
+* Analyze tourist reviews
+* Show:
+
+  * positive
+  * neutral
+  * negative reviews
+* Create admin dashboard with charts
+
+Additional Features:
+
+* Interactive tourist cards
+* Search functionality
+* Tourist destination filtering
+* User feedback section
+* Location cards with images
+* Responsive navigation bar
+* Footer section
+
+Technical Requirements:
+
+* Use Flask backend
+* SQLite database
+* Organize project with:
+
+  * templates folder
+  * static folder
+* Use Bootstrap for UI
+* Use Chart.js for analytics graphs
+* Use clean modular code
+* Add comments in code
+
+Pages Required:
+
+* Home page
+* Explore destinations page
+* AI planner page
+* Eco score page
+* Dashboard page
+* About page
+
+Create:
+
+* app.py
+* requirements.txt
+* HTML templates
+* CSS styling
+* JavaScript interactions
+* Sample database entries
+
+Also include:
+
+* 10 sample tourist destinations from Jharkhand
+* Sample tourist reviews
+* Sample tribal handicraft marketplace data
+
+Make the project beginner-friendly, visually impressive, and suitable for Smart India Hackathon presentation.

@@ -3,20 +3,34 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: EcoJharkhand AI tourism platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: destinations
+    description: Tourist destinations
+  - name: itinerary
+    description: AI itinerary planner
+  - name: eco
+    description: Eco score system
+  - name: reviews
+    description: Tourist reviews and sentiment
+  - name: handicrafts
+    description: Tribal handicraft marketplace
+  - name: budget
+    description: Budget calculator
+  - name: stats
+    description: Dashboard statistics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +38,272 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /destinations:
+    get:
+      operationId: listDestinations
+      tags: [destinations]
+      summary: List all tourist destinations
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category (waterfall, forest, village, temple, eco)
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by name or description
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+          description: Filter featured/hidden gems
+      responses:
+        "200":
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+    post:
+      operationId: createDestination
+      tags: [destinations]
+      summary: Create a destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DestinationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+
+  /destinations/{id}:
+    get:
+      operationId: getDestination
+      tags: [destinations]
+      summary: Get a destination by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Destination detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+        "404":
+          description: Not found
+
+  /destinations/stats/summary:
+    get:
+      operationId: getDestinationStats
+      tags: [destinations]
+      summary: Get destination category counts and top-rated destinations
+      responses:
+        "200":
+          description: Destination statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DestinationStats"
+
+  /itinerary/generate:
+    post:
+      operationId: generateItinerary
+      tags: [itinerary]
+      summary: Generate AI personalized itinerary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItineraryRequest"
+      responses:
+        "200":
+          description: Generated itinerary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Itinerary"
+
+  /eco/leaderboard:
+    get:
+      operationId: getEcoLeaderboard
+      tags: [eco]
+      summary: Get eco score leaderboard
+      responses:
+        "200":
+          description: Top eco scorers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EcoUser"
+
+  /eco/scores:
+    post:
+      operationId: addEcoScore
+      tags: [eco]
+      summary: Add eco score entry for a user action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EcoScoreInput"
+      responses:
+        "201":
+          description: Score recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcoScoreEntry"
+
+  /eco/user/{name}:
+    get:
+      operationId: getUserEcoScore
+      tags: [eco]
+      summary: Get eco score for a specific user
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User eco profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcoUser"
+
+  /reviews:
+    get:
+      operationId: listReviews
+      tags: [reviews]
+      summary: List reviews with optional sentiment filter
+      parameters:
+        - name: destinationId
+          in: query
+          schema:
+            type: integer
+        - name: sentiment
+          in: query
+          schema:
+            type: string
+          description: Filter by sentiment (positive, neutral, negative)
+      responses:
+        "200":
+          description: List of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Submit a tourist review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+      responses:
+        "201":
+          description: Review submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /reviews/sentiment/summary:
+    get:
+      operationId: getSentimentSummary
+      tags: [reviews]
+      summary: Get sentiment analysis summary across all reviews
+      responses:
+        "200":
+          description: Sentiment breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SentimentSummary"
+
+  /handicrafts:
+    get:
+      operationId: listHandicrafts
+      tags: [handicrafts]
+      summary: List tribal handicraft items
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of handicraft items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Handicraft"
+
+  /budget/calculate:
+    post:
+      operationId: calculateBudget
+      tags: [budget]
+      summary: Calculate estimated travel budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetRequest"
+      responses:
+        "200":
+          description: Budget breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetResult"
+
+  /stats/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [stats]
+      summary: Get overall platform statistics for dashboard
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +314,370 @@ components:
       required:
         - status
 
+    Destination:
+      type: object
+      required: [id, name, category, description, location, ecoScore, tribalStory, culturalInfo, traditions, imageUrl, isHiddenGem, rating, visitCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+          description: waterfall, forest, village, temple, eco
+        description:
+          type: string
+        location:
+          type: string
+        ecoScore:
+          type: integer
+          description: Eco friendliness score 1-100
+        tribalStory:
+          type: string
+        culturalInfo:
+          type: string
+        traditions:
+          type: string
+        imageUrl:
+          type: string
+        isHiddenGem:
+          type: boolean
+        rating:
+          type: number
+        visitCount:
+          type: integer
+        bestSeason:
+          type: ["string", "null"]
+        entryFee:
+          type: ["integer", "null"]
+
+    DestinationInput:
+      type: object
+      required: [name, category, description, location, tribalStory, culturalInfo, traditions, imageUrl]
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        ecoScore:
+          type: integer
+        tribalStory:
+          type: string
+        culturalInfo:
+          type: string
+        traditions:
+          type: string
+        imageUrl:
+          type: string
+        isHiddenGem:
+          type: boolean
+        bestSeason:
+          type: string
+        entryFee:
+          type: integer
+
+    DestinationStats:
+      type: object
+      required: [categoryBreakdown, topRated, totalCount, hiddenGemsCount]
+      properties:
+        categoryBreakdown:
+          type: array
+          items:
+            type: object
+            required: [category, count]
+            properties:
+              category:
+                type: string
+              count:
+                type: integer
+        topRated:
+          type: array
+          items:
+            $ref: "#/components/schemas/Destination"
+        totalCount:
+          type: integer
+        hiddenGemsCount:
+          type: integer
+
+    ItineraryRequest:
+      type: object
+      required: [days, budget, interests, travelType]
+      properties:
+        days:
+          type: integer
+          minimum: 1
+          maximum: 14
+        budget:
+          type: integer
+          description: Budget in INR
+        interests:
+          type: array
+          items:
+            type: string
+          description: e.g. ["nature", "tribal culture", "waterfalls", "adventure"]
+        travelType:
+          type: string
+          description: solo, couple, family, group
+        startLocation:
+          type: string
+
+    Itinerary:
+      type: object
+      required: [days, totalEstimatedCost, ecoTips, summary]
+      properties:
+        days:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItineraryDay"
+        totalEstimatedCost:
+          type: integer
+        ecoTips:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+
+    ItineraryDay:
+      type: object
+      required: [day, destinations, activities, accommodation, estimatedCost, ecoScore]
+      properties:
+        day:
+          type: integer
+        destinations:
+          type: array
+          items:
+            type: string
+        activities:
+          type: array
+          items:
+            type: string
+        accommodation:
+          type: string
+        estimatedCost:
+          type: integer
+        ecoScore:
+          type: integer
+
+    EcoUser:
+      type: object
+      required: [name, totalPoints, badge, rank, actions]
+      properties:
+        name:
+          type: string
+        totalPoints:
+          type: integer
+        badge:
+          type: string
+          description: seed, sapling, tree, forest, guardian
+        rank:
+          type: integer
+        actions:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcoScoreEntry"
+
+    EcoScoreInput:
+      type: object
+      required: [userName, action, points]
+      properties:
+        userName:
+          type: string
+        action:
+          type: string
+          description: eco_transport, homestay, local_artisan, no_plastic, trail_cleanup
+        points:
+          type: integer
+
+    EcoScoreEntry:
+      type: object
+      required: [id, userName, action, points, createdAt]
+      properties:
+        id:
+          type: integer
+        userName:
+          type: string
+        action:
+          type: string
+        points:
+          type: integer
+        createdAt:
+          type: string
+
+    Review:
+      type: object
+      required: [id, userName, destinationId, destinationName, text, rating, sentiment, createdAt]
+      properties:
+        id:
+          type: integer
+        userName:
+          type: string
+        destinationId:
+          type: integer
+        destinationName:
+          type: string
+        text:
+          type: string
+        rating:
+          type: integer
+        sentiment:
+          type: string
+          description: positive, neutral, negative
+        createdAt:
+          type: string
+
+    ReviewInput:
+      type: object
+      required: [userName, destinationId, text, rating]
+      properties:
+        userName:
+          type: string
+        destinationId:
+          type: integer
+        text:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+
+    SentimentSummary:
+      type: object
+      required: [positive, neutral, negative, total, recentReviews]
+      properties:
+        positive:
+          type: integer
+        neutral:
+          type: integer
+        negative:
+          type: integer
+        total:
+          type: integer
+        recentReviews:
+          type: array
+          items:
+            $ref: "#/components/schemas/Review"
+        averageRating:
+          type: number
+
+    Handicraft:
+      type: object
+      required: [id, name, artisan, village, category, price, description, imageUrl, inStock]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        artisan:
+          type: string
+        village:
+          type: string
+        category:
+          type: string
+          description: pottery, weaving, painting, jewelry, bamboo, wood
+        price:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        inStock:
+          type: boolean
+
+    BudgetRequest:
+      type: object
+      required: [days, travelType, accommodationType, transportType]
+      properties:
+        days:
+          type: integer
+        travelType:
+          type: string
+          description: solo, couple, family, group
+        accommodationType:
+          type: string
+          description: budget, homestay, mid-range, luxury
+        transportType:
+          type: string
+          description: public, shared, private, eco
+        destinations:
+          type: array
+          items:
+            type: string
+        includeLocalShopping:
+          type: boolean
+
+    BudgetResult:
+      type: object
+      required: [transport, accommodation, food, activities, localShopping, total, perPersonCost, breakdown]
+      properties:
+        transport:
+          type: integer
+        accommodation:
+          type: integer
+        food:
+          type: integer
+        activities:
+          type: integer
+        localShopping:
+          type: integer
+        total:
+          type: integer
+        perPersonCost:
+          type: integer
+        breakdown:
+          type: array
+          items:
+            type: object
+            required: [category, amount, percentage]
+            properties:
+              category:
+                type: string
+              amount:
+                type: integer
+              percentage:
+                type: number
+
+    DashboardStats:
+      type: object
+      required: [totalDestinations, totalReviews, totalEcoUsers, totalHandicrafts, sentimentBreakdown, categoryBreakdown, topEcoUsers, recentActivity]
+      properties:
+        totalDestinations:
+          type: integer
+        totalReviews:
+          type: integer
+        totalEcoUsers:
+          type: integer
+        totalHandicrafts:
+          type: integer
+        sentimentBreakdown:
+          $ref: "#/components/schemas/SentimentSummary"
+        categoryBreakdown:
+          type: array
+          items:
+            type: object
+            required: [category, count]
+            properties:
+              category:
+                type: string
+              count:
+                type: integer
+        topEcoUsers:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcoUser"
+        recentActivity:
+          type: array
+          items:
+            type: object
+            required: [type, message, createdAt]
+            properties:
+              type:
+                type: string
+              message:
+                type: string
+              createdAt:
+                type: string

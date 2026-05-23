@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "EcoJharkhand AI"
+version = "1.0.0"
+id = "artifacts/ecojharkhand"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18165
+
+[services.development]
+run = "pnpm --filter @workspace/ecojharkhand run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ecojharkhand", "run", "build" ]
+publicDir = "artifacts/ecojharkhand/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18165"
+BASE_PATH = "/"
